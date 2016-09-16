@@ -1,22 +1,20 @@
-title: Strata by HTML5 UP
+title: Basem Khirat
 description: >
-  **I am Strata**, a super simple
-  responsive site template freebie
-  crafted by [HTML5 UP](http://html5up.net).
-copyright: Untitled
+  **I am Basem**, a web developer.
+copyright: basemkhirat
 sass:
   sass_dir: assets/sass
 url: http://localhost:4000
 disqus_shortname: stratajekylldemo
-facebook_username:
-twitter_username: "#"
-linkedin_username: "#"
+facebook_username: "basemdev"
+twitter_username: "basemkhirat"
+linkedin_username:
 instagram_username:
 pinterest_username:
 flickr_username:
-github_username:  "#"
+github_username:  "basemkhirat"
 feed_icon: rss
-email: "#"
+email: "basemkhirat@gmail.com"
 gems: [jekyll-paginate]
 paginate_path: "/page/:num/"
 paginate: 5
