@@ -21,4 +21,4 @@ paginate_path: "/page/:num/"
 paginate: 5
 
 github:
-  url: http://localhost:4000
+  url: http://basemkhirat.com
