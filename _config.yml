@@ -2,6 +2,7 @@ title: Basem Khirat
 description: >
   **I am Basem**, a web developer.
 copyright: basemkhirat
+image: "images/basemkhirat.png"
 sass:
   sass_dir: assets/sass
 url: http://localhost:4000
