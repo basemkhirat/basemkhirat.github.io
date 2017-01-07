@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Flexible elasticseach builder to run complex queries with an easier way"
-category: rest
+category: elasticsearch
 excerpt: ''
 disqus: enabled
 ---
