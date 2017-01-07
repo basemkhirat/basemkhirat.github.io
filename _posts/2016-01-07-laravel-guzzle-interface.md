@@ -5,19 +5,19 @@ category: rest
 disqus: enabled
 ---
 
-#####1) Install package via composer:
+##1) Install package via composer:
 
 	composer require basemkhirat/api
 
-#####2) Add package service provider:
+##2) Add package service provider:
 
 	Basemkhirat\API\APIServiceProvider::class
 	
-#####3) Add package alias:
+##3) Add package alias:
 
 	'API' => Basemkhirat\API\Facades\API::class
 	
-#####4) Publishing:
+##4) Publishing:
     
     php artisan vendor:publish
 	
