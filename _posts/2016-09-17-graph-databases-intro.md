@@ -2,6 +2,7 @@
 layout: post
 title:  "Introduction to graph databases"
 category: databases
+excerpt: ''
 disqus: enabled
 ---
 

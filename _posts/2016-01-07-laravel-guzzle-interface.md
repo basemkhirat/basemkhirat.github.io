@@ -2,6 +2,7 @@
 layout: post
 title:  "Guzzle interface to make API calls for laravel 5 applications"
 category: rest
+excerpt: ''
 disqus: enabled
 ---
 
