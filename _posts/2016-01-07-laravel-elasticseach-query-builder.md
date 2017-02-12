@@ -5,7 +5,7 @@ category: indexing
 excerpt: ''
 disqus: enabled
 ---
-
+    
 <p align="center">
 
 <a href="https://packagist.org/packages/basemkhirat/elasticsearch"><img src="https://poser.pugx.org/basemkhirat/elasticsearch/v/stable.svg" alt="Latest Stable Version"></a>
@@ -19,44 +19,37 @@ disqus: enabled
 <p align="center"><img src="http://basemkhirat.com/images/basemkhirat-elasticsearch.png"></p>
 
 
-## Laravel elasticseach query builder to run complex queries with an elegant syntax.
+## Laravel elasticseach query builder to build complex queries using an elegant syntax
 
-
-
-- Laravel [elasticsearch](https://www.elastic.co/products/elasticsearch) query builder inspired from Eloquent.
 - Keep away from wasting your time by replacing array queries with simple and elegant syntax you will love.
 - Comes with [laravel 5.4](https://laravel.com/docs/5.4) and [laravel scout 3](https://laravel.com/docs/5.4/scout) support.
 - Dealing with multiple elasticsearch connections at the same time.
 - Support scan and scroll queries for dealing big data.
-- Awesome Pagination based on [LengthAwarePagination](https://github.com/illuminate/pagination).
+- Awesome pagination based on [LengthAwarePagination](https://github.com/illuminate/pagination).
 - Feeling free to create, drop and mapping index fields.
 - Caching queries using a caching layer over query builder built on [laravel cache](https://laravel.com/docs/5.4/cache).
 
 
-
 ## Installation
 
-#####1) Install package using composer:
+##### 1) Install package using composer:
 
 	composer require basemkhirat/elasticsearch
 
-#####2) Add package service provider:
+##### 2) Add package service provider:
 
 	Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class
 	
-#####3) Add package alias:
+##### 3) Add package alias:
 
 	'ES' => Basemkhirat\Elasticsearch\Facades\ES::class
 	
-#####4) Publishing:
+##### 4) Publishing:
     
     php artisan vendor:publish
 
 	
 ## Configuration
-
-
-#### Setting your connections
 
   
   After publishing, two configuration files will be created.
@@ -168,13 +161,13 @@ Have a look at [laravel Scout documentation](https://laravel.com/docs/5.4/scout#
                     ->type("my_type")
                     ->get();    # return collection of results
 
-You can rewite the above query to
+You can rewrite the above query to
 
-    $documents = ES::get();    // return collection of results
+    $documents = ES::get();    # return collection of results
     
 The query builder will use the default connection, index, and type names setted in configuration file `es.php`. 
  
-Index and type names setted in query will override values the configuration file.
+Index and type names setted in query overrides their values in `es.php`.
 
 
 ---
@@ -345,7 +338,7 @@ Index and type names setted in query will override values the configuration file
   
 ##### Getting the query array without execution
 
-	   $documents = ES::search("foo")->where("views", ">", 150)->query();
+	$documents = ES::search("foo")->where("views", ">", 150)->query();
   
 ##### Ignoring bad HTTP response
       
@@ -501,14 +494,12 @@ Package comes with a built-in caching layer based on laravel cache.
     Document has _id = 3 will be deleted.
     
     [id is required]
-  
-
+    
 #### Author
-[Basem Khirat](http://basemkhirat.com) - [basemkhirat@gmail.com](mailto:basemkhirat@gmail.com) - [@basemkhirat](http://twitter.com/basemkhirat)  
+[Basem Khirat](http://basemkhirat.com) - [basemkhirat@gmail.com](mailto:basemkhirat@gmail.com) - [@basemkhirat](https://twitter.com/basemkhirat)  
 
 #### License
 
 MIT
 
 `Have a happy searching.. `
-    
