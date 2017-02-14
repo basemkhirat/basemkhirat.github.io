@@ -8,6 +8,8 @@ disqus: enabled
     
 <p align="center">
 
+<a href="https://travis-ci.org/basemkhirat/elasticsearch"><img src="https://travis-ci.org/basemkhirat/elasticsearch.svg" alt="Build Status"></a>
+
 <a href="https://packagist.org/packages/basemkhirat/elasticsearch"><img src="https://poser.pugx.org/basemkhirat/elasticsearch/v/stable.svg" alt="Latest Stable Version"></a>
 
 <a href="https://packagist.org/packages/basemkhirat/elasticsearch"><img src="https://poser.pugx.org/basemkhirat/elasticsearch/d/total.svg" alt="Total Downloads"></a>
@@ -21,8 +23,8 @@ disqus: enabled
 
 ## Laravel elasticseach query builder to build complex queries using an elegant syntax
 
-- Keep away from wasting your time by replacing array queries with simple and elegant syntax you will love.
-- Comes with [laravel 5.4](https://laravel.com/docs/5.4) and [laravel scout 3](https://laravel.com/docs/5.4/scout) support.
+- Keep away from wasting your time by replacing array queries with a simple and elegant syntax you will love.
+- Comes with [laravel 5.4](https://laravel.com/docs/5.4) and [laravel scout](https://laravel.com/docs/5.4/scout) support.
 - Dealing with multiple elasticsearch connections at the same time.
 - Support scan and scroll queries for dealing big data.
 - Awesome pagination based on [LengthAwarePagination](https://github.com/illuminate/pagination).
@@ -338,7 +340,7 @@ Index and type names setted in query overrides their values in `es.php`.
   
 ##### Getting the query array without execution
 
-	$documents = ES::search("foo")->where("views", ">", 150)->query();
+	$query = ES::search("foo")->where("views", ">", 150)->query();
   
 ##### Ignoring bad HTTP response
       
@@ -495,10 +497,19 @@ Package comes with a built-in caching layer based on laravel cache.
     
     [id is required]
     
-#### Author
+### Author
 [Basem Khirat](http://basemkhirat.com) - [basemkhirat@gmail.com](mailto:basemkhirat@gmail.com) - [@basemkhirat](https://twitter.com/basemkhirat)  
 
-#### License
+
+### Bugs, Suggestions and Contributions
+
+Thanks to [everyone](https://github.com/basemkhirat/elasticsearch/graphs/contributors)
+who has contributed to this project!
+
+Please use [Github](https://github.com/basemkhirat/elasticsearch) for reporting bugs, 
+and making comments or suggestions.
+
+### License
 
 MIT
 
