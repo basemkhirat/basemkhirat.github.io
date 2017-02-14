@@ -520,4 +520,4 @@ and making comments or suggestions.
 
 MIT
 
-`Have a happy searching.. `
+`Have a happy searching..`
