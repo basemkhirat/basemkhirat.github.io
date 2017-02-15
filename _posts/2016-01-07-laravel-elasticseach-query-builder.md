@@ -21,42 +21,68 @@ disqus: enabled
 <p align="center"><img src="http://basemkhirat.com/images/basemkhirat-elasticsearch.png"></p>
 
 
-## Laravel elasticseach query builder to build complex queries using an elegant syntax
+## Laravel and Lumen elasticseach query builder to build complex queries using an elegant syntax
 
-- Keep away from wasting your time by replacing array queries with a simple and elegant syntax you will love.
+- Keeps you away from wasting your time by replacing array queries with a simple and elegant syntax you will love.
+- Lumen framework support.
 - Supports [laravel 5.4](https://laravel.com/docs/5.4) and can be used as a  [laravel scout](https://laravel.com/docs/5.4/scout) driver.
 - Dealing with multiple elasticsearch connections at the same time.
-- Support scan and scroll queries for dealing big data.
+- Supports scan and scroll queries for dealing big data.
 - Awesome pagination based on [LengthAwarePagination](https://github.com/illuminate/pagination).
 - Feeling free to create, drop and mapping index fields.
 - Caching queries using a caching layer over query builder built on [laravel cache](https://laravel.com/docs/5.4/cache).
 
 ## Requirements
 
-- php >= 5.6.6 
+- `php` >= 5.6.6 
   
   See [Travis CI Builds](https://travis-ci.org/basemkhirat/elasticsearch).
 
-- laravel/laravel >= 5.3
+- `laravel/laravel` >= 5.3 or `laravel/lumen` >= 5.3
 
 ## Installation
 
-##### 1) Install package using composer:
+### <u>Laravel Installation</u>
+
+
+##### 1) Install package using composer.
 
 	composer require basemkhirat/elasticsearch
 
-##### 2) Add package service provider:
+##### 2) Add package service provider.
 
 	Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class
 	
-##### 3) Add package alias:
+##### 3) Add package alias.
 
 	'ES' => Basemkhirat\Elasticsearch\Facades\ES::class
 	
-##### 4) Publishing:
+##### 4) Publishing.
     
-    php artisan vendor:publish
+    php artisan vendor:publish --provider="Basemkhirat\Elasticsearch\ElasticsearchServiceProvider"
 
+
+### <u>Lumen Installation</u>
+
+##### 1) Install package using composer.
+
+	composer require basemkhirat/elasticsearch
+
+##### 2) Add package service provider in `bootstrap/app.php`.
+
+	$app->register(Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class);
+	
+##### 3) Copy package config directory `vendor/basemkhirat/elasticsearch/src/config` to root folder alongside with `app` directory.
+	
+##### 4) Making Lumen read our configuration files by adding these lines in `bootstrap/app.php` before returning Lumen `$app` instance.
+
+	$app->configure("es");
+	$app->configure("scout");
+	
+##### 5) Making Lumen work with facades by uncommenting this line in `bootstrap/app.php`.
+
+	$app->withFacades();
+   
 	
 ## Configuration
 
@@ -473,10 +499,10 @@ Package comes with a built-in caching layer based on laravel cache.
 ##### Update using script
        
 
-    # icrement field by script
+    # increment field by script
     
     ES::id(3)->script(
-        "ctx._source.$field -= params.count",
+        "ctx._source.$field += params.count",
         ["count" => 1]
     );
     
@@ -490,7 +516,7 @@ Package comes with a built-in caching layer based on laravel cache.
     # delete the doc if the tags field contain mongodb, otherwise it does nothing (noop)
     
     ES::id(3)->script(
-        "if (ctx._source.tags.contains(params.tag)) { ctx.op = "delete" } else { ctx.op = "none" }",
+        "if (ctx._source.tags.contains(params.tag)) { ctx.op = 'delete' } else { ctx.op = 'none' }",
         ["tag" => "mongodb"]
     );
     
@@ -504,11 +530,16 @@ Package comes with a built-in caching layer based on laravel cache.
     
     [id is required]
     
-### Author
+
+## Releases
+
+  See [Change Log](https://github.com/basemkhirat/elasticsearch/blob/master/CHANGELOG.md).
+
+## Author
 [Basem Khirat](http://basemkhirat.com) - [basemkhirat@gmail.com](mailto:basemkhirat@gmail.com) - [@basemkhirat](https://twitter.com/basemkhirat)  
 
 
-### Bugs, Suggestions and Contributions
+## Bugs, Suggestions and Contributions
 
 Thanks to [everyone](https://github.com/basemkhirat/elasticsearch/graphs/contributors)
 who has contributed to this project!
@@ -516,7 +547,7 @@ who has contributed to this project!
 Please use [Github](https://github.com/basemkhirat/elasticsearch) for reporting bugs, 
 and making comments or suggestions.
 
-### License
+## License
 
 MIT
 
