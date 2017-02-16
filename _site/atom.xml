@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	
+	<title>Basem Khirat</title>
+	<subtitle>I am Basem, a web developer.
+</subtitle>
+	<link href="http://localhost:4000/atom.xml" rel="self" />
+	<link href="http://localhost:4000/" />
+	<id>http://localhost:4000/</id>
+	<updated>2016-09-17T22:34:09+02:00</updated>
+  
+	<entry>
+		<title>About me</title>
+		<link href="http://localhost:4000/me/2016/09/17/hello-world.html" />
+		<link rel="alternate" type="text/html" href="http://localhost:4000/me/2016/09/17/hello-world.html"/>
+		<id>http://localhost:4000/me/2016/09/17/hello-world.html</id>
+		<updated>2016-09-17T00:00:00+02:00</updated>
+		<summary>Some text.</summary>
+		<content type="xhtml">
+			<div xmlns="http://www.w3.org/1999/xhtml">
+				<p>Start blogging &lt;/&gt;</p>
+
+ 
+<br />
+<hr />
+<p>You’ve just read <strong>"<a href="http://localhost:4000/me/2016/09/17/hello-world.html">About me</a>"</strong> on <strong>"<a href="http://localhost:4000/">Basem Khirat</a>"</strong>.</p>
+
+			</div>
+		</content>
+		<author>
+			<name>basemkhirat</name>
+		</author>
+	</entry>
+  
+	<entry>
+		<title>Introduction to graph databases</title>
+		<link href="http://localhost:4000/databases/2016/09/17/graph-databases-intro.html" />
+		<link rel="alternate" type="text/html" href="http://localhost:4000/databases/2016/09/17/graph-databases-intro.html"/>
+		<id>http://localhost:4000/databases/2016/09/17/graph-databases-intro.html</id>
+		<updated>2016-09-17T00:00:00+02:00</updated>
+		<summary>Some text.</summary>
+		<content type="xhtml">
+			<div xmlns="http://www.w3.org/1999/xhtml">
+				<h3 id="in-the-past-if-we-had-a-large-scale-of-data-we-prefered-using-flat-table-that-stores-the-normalization-image-of-data">In the past, if we had a large scale of data we prefered using “flat table” that stores the normalization image of data,</h3>
+
+<h3 id="others-uses-nosql-databases-to-be-easily-scale-data-horizontally-with-multiple-db-servers-but-these-ara-expensive-solutions">Others uses NoSQL databases to be easily scale data horizontally with multiple DB servers but these ara expensive solutions.</h3>
+
+<h2 id="what-about-that-">What about that ?</h2>
+
+<h4 id="manipulating-with-large-data-is-not-easy-especially-when-we-make-analytics-or-business-data-reports">Manipulating with large data is not easy especially when we make analytics or business data reports.</h4>
+
+<p><img width="100%" src="https://cl.ly/2k0U0c352d44/Image%202016-09-17%20at%2010.14.19%20PM.png" /></p>
+
+<h4 id="neo4j-represents-a-good-solution-graph-database">Neo4j represents a good solution “Graph Database”.</h4>
+
+<h4 id="see-this-video-and-give-a-try">See this video and give a try.</h4>
+
+<iframe width="100%" height="450" src="https://www.youtube.com/embed/NO3C-CWykkY" frameborder="0" allowfullscreen=""></iframe>
+
+<p><a href="https://neo4j.com/" target="_blank">Discover Neo4j</a></p>
+
+ 
+<br />
+<hr />
+<p>You’ve just read <strong>"<a href="http://localhost:4000/databases/2016/09/17/graph-databases-intro.html">Introduction to graph databases</a>"</strong> on <strong>"<a href="http://localhost:4000/">Basem Khirat</a>"</strong>.</p>
+
+			</div>
+		</content>
+		<author>
+			<name>basemkhirat</name>
+		</author>
+	</entry>
+  
+</feed>
