@@ -1,12 +1,17 @@
+a {
+    border-bottom: none;
+}
+
 code {
     background: rgba(17, 17, 17, 0.78);
     color: #fff;
 }
 
-.highlighter-rouge .highlight{
+.highlighter-rouge .highlight {
     background: none;
 }
 
-.highlight{
+.highlight {
     background: none;
 }
+
