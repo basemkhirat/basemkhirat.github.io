@@ -5,6 +5,7 @@ category: indexing
 excerpt: ''
 disqus: enabled
 ---
+
 <p align="center">
 
 <a href="https://travis-ci.org/basemkhirat/elasticsearch"><img src="https://travis-ci.org/basemkhirat/elasticsearch.svg" alt="Build Status"></a>
@@ -38,7 +39,7 @@ disqus: enabled
   
   See [Travis CI Builds](https://travis-ci.org/basemkhirat/elasticsearch).
 
-- `laravel/laravel` >= 5.3 or `laravel/lumen` >= 5.3
+- `laravel/laravel` >= 5.3 or `laravel/lumen` >= 5.3 or `composer application`
 
 ## Installation
 
