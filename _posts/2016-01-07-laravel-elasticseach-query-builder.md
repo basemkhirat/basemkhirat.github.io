@@ -18,7 +18,7 @@ disqus: enabled
 
 </p>
 
-<p align="center"><img src="http://basemkhirat.com/images/basemkhirat-elasticsearch.png"></p>
+<p align="center"><img src="http://basemkhirat.com/images/basemkhirat-elasticsearch.png?123"></p>
 
 
 ## Laravel, Lumen and Native php elasticseach query builder to build complex queries using an elegant syntax
@@ -128,7 +128,7 @@ $documents = $connection->search("hello")->get();
 ```
 
 
-## Configuration
+## Configuration (Laravel & Lumen)
 
   
   After publishing, two configuration files will be created.
@@ -425,7 +425,7 @@ Index and type names setted in query overrides their values in `es.php`.
   >
   
   
-##### Query Caching 
+##### Query Caching (Laravel & Lumen)
 
 Package comes with a built-in caching layer based on laravel cache.
 
