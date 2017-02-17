@@ -128,6 +128,7 @@ $documents = $connection->search("hello")->get();
 ```
 
 
+
 ## Configuration (Laravel & Lumen)
 
   
