@@ -24,13 +24,14 @@ disqus: enabled
 ## Laravel, Lumen and Native php elasticseach query builder to build complex queries using an elegant syntax
 
 - Keeps you away from wasting your time by replacing array queries with a simple and elegant syntax you will love.
+- Feeling free to create, drop and mapping index fields throw easy artisan console commands.
 - Lumen framework support.
 - Native php and composer based applications support.
 - Supports [laravel 5.4](https://laravel.com/docs/5.4) and can be used as a  [laravel scout](https://laravel.com/docs/5.4/scout) driver.
 - Dealing with multiple elasticsearch connections at the same time.
 - Supports scan and scroll queries for dealing big data.
 - Awesome pagination based on [LengthAwarePagination](https://github.com/illuminate/pagination).
-- Feeling free to create, drop and mapping index fields.
+
 - Caching queries using a caching layer over query builder built on [laravel cache](https://laravel.com/docs/5.4/cache).
 
 ## Requirements
@@ -132,8 +133,12 @@ $documents = $connection->search("hello")->get();
   - `config/es.php` where you can add more than one elasticsearch server.
 
 ```
+ 
+ # Here you can define the default connection name.
 
  'default' => env('ELASTIC_CONNECTION', 'default'),
+
+ # Here you can define your connections.
 
  'connections' => [
     'default' => [
@@ -149,11 +154,95 @@ $documents = $connection->search("hello")->get();
         'index' => env('ELASTIC_INDEX', 'my_index'),
         'type' => env('ELASTIC_TYPE', 'my_type'),
     ]
-]
+ ],
+ 
+ # Here you can define your indices.
+ 
+ 'indices' => [
+    'my_index' => [
+        'settings' => [
+            "number_of_shards" => 1,
+            "number_of_replicas" => 0,
+        ],
+        'mappings' => [
+            'posts' => [
+                'title' => [
+                    'type' => 'string'
+                ]
+            ]
+        ]
+    ]
+ ]
 
 ```
   
   - `config/scout.php` where you can use package as a laravel scout driver.
+
+## Working with console environment
+
+With some artisan commands you can do some tasks such as creating or updating settings or mappings.
+
+Note that all commands are running with `--connection=default` option, you can change it throw the command.
+
+These are all available commands:
+
+##### List All indices on server.
+
+```
+php artisan es:indices 
+
++--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
+| health | status | index    | uuid                   | pri | rep | docs.count | docs.deleted | store.size | pri.store.size |
++--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
+| green  | open   | my_index | 5URW60KJQNionAJgL6Q2TQ | 1   | 0   | 0          | 0            | 260b       | 260b           |
++--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
+
+```
+
+##### Create a new index using defined settings and mapping in `es.php` config file.
+
+```
+# Create all indices in config file.
+
+php artisan es:index:create
+
+# Create only 'my_index' index in config file
+
+php artisan es:index:create my_index 
+
+```
+
+##### Update index using defined settings and mapping in `es.php` config file.
+
+```
+# Update all indices in config file.
+
+php artisan es:index:update
+
+# Update only 'my_index' index in config file
+
+php artisan es:index:update my_index 
+
+```
+
+##### Drop index.
+
+Running Drop command with `--force` option will skip all confirmation messages.
+
+```
+# Drop all indices in config file.
+
+php artisan es:index:drop
+
+# Drop specific index on sever. Not matter to be in config file.
+
+php artisan es:index:drop my_index 
+
+```
+
+
+
+
 
 ## Usage as a Laravel Scout driver
 
@@ -349,6 +438,15 @@ Index and type names setted in query overrides their values in `es.php`.
     
   >
   
+##### Search by a distance from a geo point 
+  
+    ES::distance("location", ["lat" => -33.8688197, "lon" => 151.20929550000005], "10km")->get();
+    ES::distance("location", "-33.8688197,151.20929550000005", "10km")->get();
+    ES::distance("location", [151.20929550000005, -33.8688197], "10km")->get();
+  
+  
+  >
+  
 ##### Search the entire document
     
     
@@ -384,7 +482,7 @@ Index and type names setted in query overrides their values in `es.php`.
                     
   Response will contain a hashed code `scroll_id` will be used to get the next result by running
     
-    $documents = ES::search("my_index")
+    $documents = ES::search("foo")
                         ->scroll("2m")
                         ->scrollID("DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAAFMFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABSxZSUDhLU3ZySFJJYXFNRV9laktBMGZ3AAAAAAAAAU4WUlA4S1N2ckhSSWFxTUVfZWpLQTBmdwAAAAAAAAFPFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABTRZSUDhLU3ZySFJJYXFNRV9laktBMGZ3")
                         ->get();
@@ -449,12 +547,12 @@ Package comes with a built-in caching layer based on laravel cache.
     ES::raw()->search([
         "index" => "my_index",
         "type"  => "my_type",
-        "body"  => [
-            "query": [
-            "bool": [
-                    "must": [
-                        [ "match": [ "address": "mill" ] ],
-                        [ "match": [ "address": "lane" ] ] 
+        "body" => [
+            "query" => [
+                "bool" => [
+                    "must" => [
+                        [ "match" => [ "address" => "mill" ] ],
+                        [ "match" => [ "address" => "lane" ] ]
                     ]
                 ]
             ]
@@ -479,18 +577,29 @@ Package comes with a built-in caching layer based on laravel cache.
   
   >
     
-##### Bulk insert a multiple of documents at once using multidimensional array of [id => data] pairs
+##### Bulk insert a multiple of documents at once.
      
-     ES::bulk(
+   
+     ES::bulk(function ($query){
+         $query->id(10)->insert(["title" => "Test document 1","content" => "Sample content 1"]);
+         $query->id(11)->insert(["title" => "Test document 2", "content" => "Sample content 2"]);
+     });
+     
+     # or use other code style using multidimensional array of [id => data] pairs
+     
+     ES::bulk([
+     
          10 => [
             "title" => "Test document 1",
             "content" => "Sample content 1"
          ],
+         
          11 => [
             "title" => "Test document 2",
             "content" => "Sample content 2"
-         ],
-     );
+         ]
+         
+     ]);
      
      The two given documents will be inserted with its associated ids
   
