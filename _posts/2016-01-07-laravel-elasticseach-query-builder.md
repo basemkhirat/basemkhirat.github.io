@@ -8,7 +8,7 @@ disqus: enabled
 
 <p align="center">
 
-<a href="https://travis-ci.org/basemkhirat/elasticsearch"><img src="https://travis-ci.org/basemkhirat/elasticsearch.svg" alt="Build Status"></a>
+<a href="https://travis-ci.org/basemkhirat/elasticsearch"><img src="https://travis-ci.org/basemkhirat/elasticsearch.svg?branch=master" alt="Build Status"></a>
 
 <a href="https://packagist.org/packages/basemkhirat/elasticsearch"><img src="https://poser.pugx.org/basemkhirat/elasticsearch/v/stable.svg" alt="Latest Stable Version"></a>
 
@@ -24,15 +24,17 @@ disqus: enabled
 ## Laravel, Lumen and Native php elasticseach query builder to build complex queries using an elegant syntax
 
 - Keeps you away from wasting your time by replacing array queries with a simple and elegant syntax you will love.
-- Feeling free to create, drop and mapping index fields throw easy artisan console commands.
+- Feeling free to create, drop, mapping and reindexing throw easy artisan console commands.
 - Lumen framework support.
 - Native php and composer based applications support.
-- Supports [laravel 5.4](https://laravel.com/docs/5.4) and can be used as a  [laravel scout](https://laravel.com/docs/5.4/scout) driver.
+- Can be used as a [laravel scout](https://laravel.com/docs/5.4/scout) driver.
 - Dealing with multiple elasticsearch connections at the same time.
-- Supports scan and scroll queries for dealing big data.
 - Awesome pagination based on [LengthAwarePagination](https://github.com/illuminate/pagination).
-
 - Caching queries using a caching layer over query builder built on [laravel cache](https://laravel.com/docs/5.4/cache).
+
+<div style="text-align:center">
+<iframe src="https://ghbtns.com/github-btn.html?user=basemkhirat&repo=elasticsearch&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+</div>
 
 ## Requirements
 
@@ -49,57 +51,71 @@ disqus: enabled
 
 ##### 1) Install package using composer.
 
-	composer require basemkhirat/elasticsearch
+```bash
+$ composer require basemkhirat/elasticsearch
+```
 
 ##### 2) Add package service provider.
 
-	Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class
-	
+```php
+Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class
+```
+
 ##### 3) Add package alias.
 
-	'ES' => Basemkhirat\Elasticsearch\Facades\ES::class
+```php
+'ES' => Basemkhirat\Elasticsearch\Facades\ES::class
+```
 	
 ##### 4) Publishing.
-    
-    php artisan vendor:publish --provider="Basemkhirat\Elasticsearch\ElasticsearchServiceProvider"
 
+```bash
+$ php artisan vendor:publish --provider="Basemkhirat\Elasticsearch\ElasticsearchServiceProvider"
+```
 
 ### <u>Lumen Installation</u>
 
 ##### 1) Install package using composer.
-
-	composer require basemkhirat/elasticsearch
+```bash
+$ composer require basemkhirat/elasticsearch
+```
 
 ##### 2) Add package service provider in `bootstrap/app.php`.
 
-	$app->register(Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class);
+```php
+$app->register(Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class);
+```
 	
 ##### 3) Copy package config directory `vendor/basemkhirat/elasticsearch/src/config` to root folder alongside with `app` directory.
 	
 	
 ##### 4) Making Lumen work with facades by uncommenting this line in `bootstrap/app.php`.
 
-	$app->withFacades();
+```php
+$app->withFacades();
+```
 
 If you don't want to enable working with Lumen facades you can access the query builder using `app("es")`.
 
-	app("es")->index("my_index")->type("my_type")->get();
-	# is similar to 
-	ES::index("my_index")->type("my_type")->get();
+```php
+app("es")->index("my_index")->type("my_type")->get();
+# is similar to 
+ES::index("my_index")->type("my_type")->get();
+```   
    
-   
-
 ### <u>Composer Installation</u>
 
 You can install package with any composer-based applications
 
 ##### 1) Install package using composer.
 
-	composer require basemkhirat/elasticsearch
+```bash
+$ composer require basemkhirat/elasticsearch
+```
 
 ##### 2) Creating a connection.
 
-```
+```php
 require "vendor/autoload.php";
 
 use Basemkhirat\Elasticsearch\Connection;
@@ -115,13 +131,12 @@ $connection = Connection::create([
         ]
     ],
     'index' => 'my_index',
-    'type' => 'my_type',
 ]);
+
 
 # access the query builder using created connection
 
 $documents = $connection->search("hello")->get();
-
 ```
 
 
@@ -132,116 +147,181 @@ $documents = $connection->search("hello")->get();
   
   - `config/es.php` where you can add more than one elasticsearch server.
 
-```
- 
- # Here you can define the default connection name.
+```php
+# Here you can define the default connection name.
 
- 'default' => env('ELASTIC_CONNECTION', 'default'),
+'default' => env('ELASTIC_CONNECTION', 'default'),
 
- # Here you can define your connections.
+# Here you can define your connections.
 
- 'connections' => [
-    'default' => [
-        'servers' => [
-            [
-                "host" => env("ELASTIC_HOST", "127.0.0.1"),
-                "port" => env("ELASTIC_PORT", 9200),
-                'user' => env('ELASTIC_USER', ''),
-                'pass' => env('ELASTIC_PASS', ''),
-                'scheme' => env('ELASTIC_SCHEME', 'http'),
-            ]
-        ],
-        'index' => env('ELASTIC_INDEX', 'my_index'),
-        'type' => env('ELASTIC_TYPE', 'my_type'),
-    ]
- ],
+'connections' => [
+	'default' => [
+	    'servers' => [
+	        [
+	            "host" => env("ELASTIC_HOST", "127.0.0.1"),
+	            "port" => env("ELASTIC_PORT", 9200),
+	            'user' => env('ELASTIC_USER', ''),
+	            'pass' => env('ELASTIC_PASS', ''),
+	            'scheme' => env('ELASTIC_SCHEME', 'http'),
+	        ]
+	    ],
+	    'index' => env('ELASTIC_INDEX', 'my_index')
+	]
+],
  
- # Here you can define your indices.
+# Here you can define your indices.
  
- 'indices' => [
-    'my_index' => [
-        'settings' => [
-            "number_of_shards" => 1,
-            "number_of_replicas" => 0,
-        ],
-        'mappings' => [
-            'posts' => [
-                'title' => [
-                    'type' => 'string'
-                ]
-            ]
-        ]
-    ]
- ]
+'indices' => [
+	'my_index_1' => [
+	    "aliases" => [
+	        "my_index"
+	    ],
+	    'settings' => [
+	        "number_of_shards" => 1,
+	        "number_of_replicas" => 0,
+	    ],
+	    'mappings' => [
+	        'posts' => [
+	            'title' => [
+	                'type' => 'string'
+	            ]
+	        ]
+	    ]
+	]
+]
 
 ```
   
   - `config/scout.php` where you can use package as a laravel scout driver.
 
-## Working with console environment
+## Working with console environment (Laravel & Lumen)
 
-With some artisan commands you can do some tasks such as creating or updating settings or mappings.
+With some artisan commands you can do some tasks such as creating or updating settings, mappings and aliases.
 
 Note that all commands are running with `--connection=default` option, you can change it throw the command.
 
 These are all available commands:
 
-##### List All indices on server.
+#### List All indices on server
+
+```bash
+$ php artisan es:indices:list
+
++----------------------+--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
+| configured (es.php)  | health | status | index    | uuid                   | pri | rep | docs.count | docs.deleted | store.size | pri.store.size |
++----------------------+--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
+| yes                  | green  | open   | my_index | 5URW60KJQNionAJgL6Q2TQ | 1   | 0   | 0          | 0            | 260b       | 260b           |
++----------------------+--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
 
 ```
-php artisan es:indices 
 
-+--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
-| health | status | index    | uuid                   | pri | rep | docs.count | docs.deleted | store.size | pri.store.size |
-+--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
-| green  | open   | my_index | 5URW60KJQNionAJgL6Q2TQ | 1   | 0   | 0          | 0            | 260b       | 260b           |
-+--------+--------+----------+------------------------+-----+-----+------------+--------------+------------+----------------+
+#### Create indices defined in `es.php` config file
 
-```
+Note that creating operation skips the index if exists.
 
-##### Create a new index using defined settings and mapping in `es.php` config file.
-
-```
+```bash
 # Create all indices in config file.
 
-php artisan es:index:create
+$ php artisan es:indices:create
 
 # Create only 'my_index' index in config file
 
-php artisan es:index:create my_index 
+$ php artisan es:indices:create my_index 
 
 ```
 
-##### Update index using defined settings and mapping in `es.php` config file.
+#### Update indices defined in `es.php` config file
 
-```
+Note that updating operation updates indices setting, aliases and mapping and doesn't delete the indexed data.
+
+```bash
 # Update all indices in config file.
 
-php artisan es:index:update
+$ php artisan es:indices:update
 
 # Update only 'my_index' index in config file
 
-php artisan es:index:update my_index 
+$ php artisan es:indices:update my_index 
 
 ```
 
-##### Drop index.
+#### Drop index
 
-Running Drop command with `--force` option will skip all confirmation messages.
+Be careful when using this command, you will lose your index data!
 
-```
+Running drop command with `--force` option will skip all confirmation messages.
+
+```bash
 # Drop all indices in config file.
 
-php artisan es:index:drop
+$ php artisan es:indices:drop
 
-# Drop specific index on sever. Not matter to be in config file.
+# Drop specific index on sever. Not matter for index to be exist in config file or not.
 
-php artisan es:index:drop my_index 
+$ php artisan es:indices:drop my_index 
 
 ```
 
 
+#### Reindexing data (with zero downtime)
 
+##### First, why reindexing?
+
+Changing index mapping doesn't reflect without data reindexing, otherwise your search results will not work on the right way.
+
+To avoid down time, your application should work with index `alias` not index `name`.
+
+The index `alias` is a constant name that application should work with to avoid change index names.
+
+##### Assume that we want to change mapping for `my_index`, this is how to do that:
+
+1) Add `alias` as example `my_index_alias` to `my_index` configuration and make sure that application is working with.
+
+```php
+"aliases" => [
+    "my_index_alias"
+]       
+```
+
+2) Update index with command:
+
+```bash
+$ php artisan es:indices:update my_index
+```
+
+3) Create a new index as example `my_new_index` with your new mapping in configuration file.
+
+```bash
+$ php artisan es:indices:create my_new_index
+```
+
+4) Reindex data from `my_index` into `my_new_index` with command:
+
+```bash
+$ php artisan es:indices:reindex my_index my_new_index
+
+# Control bulk size. Adjust it with your server.
+
+$ php artisan es:indices:reindex my_index my_new_index --bulk-size=2000
+
+# Control query scroll value.
+
+$ php artisan es:indices:reindex my_index my_new_index --bulk-size=2000 --scroll=2m
+
+# Skip reindexing errors such as mapper parsing exceptions.
+
+$ php artisan es:indices:reindex my_index my_new_index --bulk-size=2000 --skip-errors
+
+# Hide all reindexing errors and show the progres bar only.
+
+$ php artisan es:indices:reindex my_index my_new_index --bulk-size=2000 --hide-errors
+```
+
+5) Remove `my_index_alias` alias from `my_index` and add it to `my_new_index` in configuration file and update with command:
+
+```bash
+$ php artisan es:indices:update
+```
 
 
 ## Usage as a Laravel Scout driver
@@ -250,16 +330,17 @@ First, follow [Laravel Scout installation](https://laravel.com/docs/5.4/scout#in
 
 All you have to do is updating these lines in `config/scout.php` configuration file.
 
+```php
+# change the default driver to 'es'
 	
-	# change the default driver to `es`
+'driver' => env('SCOUT_DRIVER', 'es'),
 	
-	'driver' => env('SCOUT_DRIVER', 'es'),
+# link `es` driver with default elasticsearch connection in config/es.php
 	
-	# link `es` driver with default elasticsearch connection in config/es.php
-	
-	'es' => [
-        'connection' => env('ELASTIC_CONNECTION', 'default'),
-    ],
+'es' => [
+    'connection' => env('ELASTIC_CONNECTION', 'default'),
+],
+```
 
 Have a look at [laravel Scout documentation](https://laravel.com/docs/5.4/scout#configuration).
 
@@ -267,225 +348,255 @@ Have a look at [laravel Scout documentation](https://laravel.com/docs/5.4/scout#
 
 #### Creating a new index
 
-    ES::create("my_index");
+```php
+ES::create("my_index");
     
-    # or 
+# or 
     
-    ES::index("my_index")->create();
-    
+ES::index("my_index")->create();
+```
     
 ##### Creating index with custom options (optional)
-    
-    ES::index("my_index")->create(function($index){
-            
-        $index->shards(5)->replicas(1)->mappping([
-            'my_type' => [
-                'properties' => [
-                    'first_name' => [
-                        'type' => 'string',
-                    ],
-                    'age' => [
-                        'type' => 'integer'
-                    ]
+   
+```php
+ES::index("my_index")->create(function($index){
+        
+    $index->shards(5)->replicas(1)->mapping([
+        'my_type' => [
+            'properties' => [
+                'first_name' => [
+                    'type' => 'string',
+                ],
+                'age' => [
+                    'type' => 'integer'
                 ]
             ]
-        ])
-        
-    });
+        ]
+    ])
     
-    # or
+});
     
-    ES::create("my_index", function($index){
-      
-          $index->shards(5)->replicas(1)->mappping([
-              'my_type' => [
-                  'properties' => [
-                      'first_name' => [
-                          'type' => 'string',
-                      ],
-                      'age' => [
-                          'type' => 'integer'
-                      ]
+# or
+    
+ES::create("my_index", function($index){
+  
+      $index->shards(5)->replicas(1)->mapping([
+          'my_type' => [
+              'properties' => [
+                  'first_name' => [
+                      'type' => 'string',
+                  ],
+                  'age' => [
+                      'type' => 'integer'
                   ]
               ]
-          ])
-      
-    });
+          ]
+      ])
+  
+});
 
-
+```
 #### Dropping index
 
-    ES::drop("my_index");
-        
-    # or
+```php
+ES::drop("my_index");
     
-    ES::index("my_index")->drop();
+# or
     
+ES::index("my_index")->drop();
+```
 #### Running queries
-
-    $documents = ES::connection("default")
-                    ->index("my_index")
-                    ->type("my_type")
-                    ->get();    # return collection of results
-
+```php
+$documents = ES::connection("default")
+                ->index("my_index")
+                ->type("my_type")
+                ->get();    # return a collection of results
+```
 You can rewrite the above query to
 
-    $documents = ES::get();    # return collection of results
-    
-The query builder will use the default connection, index, and type names setted in configuration file `es.php`. 
- 
-Index and type names setted in query overrides their values in `es.php`.
+```php
+$documents = ES::type("my_type")->get();    # return a collection of results
+```
 
+The query builder will use the default connection, index name in configuration file `es.php`. 
+ 
+Connection and index names in query overrides connection and index names in configuration file `es.php`.
 
 ##### Getting document by id
-
-    $documents = ES::id(3)->get();
+```php
+ES::type("my_type")->id(3)->first();
     
-    # or
+# or
     
-    $documents = ES::_id(3)->get();
-
+ES::type("my_type")->_id(3)->first();
+```
 ##### Sorting
+```php 
+ES::type("my_type")->orderBy("created_at", "desc")->get();
     
-    $documents = ES::orderBy("created_at", "desc")->get();
+# Sorting with text search score
     
-    # Sorting with text search score
-    
-    $documents = ES::orderBy("_score")->get();
-    
+ES::type("my_type")->orderBy("_score")->get();
+```
 ##### Limit and offset
-    
-    $documents = ES::take(10)->skip(5)->get();
-    
+```php
+ES::type("my_type")->take(10)->skip(5)->get();
+```
 ##### Select only specific fields
-    
-    $documents = ES::select("title", "content")->take(10)->skip(5)->get();
-    
+```php    
+ES::type("my_type")->select("title", "content")->take(10)->skip(5)->get();
+```
 ##### Where clause
-    
-    ES::where("views", 150)->get(); or ES::where("views", "=", 150)->get();
+```php    
+ES::type("my_type")->where("status", "published")->get();
 
+# or
+
+ES::type("my_type")->where("status", "=", "published")->get();
+```
 ##### Where greater than
-
-    ES::where("views", ">", 150)->get();
-    
+```php
+ES::type("my_type")->where("views", ">", 150)->get();
+```
 ##### Where greater than or equal
-
-    ES::where("views", ">=", 150)->get();
-    
+```php
+ES::type("my_type")->where("views", ">=", 150)->get();
+```
 ##### Where less than
-
-    ES::where("views", "<", 150)->get();
-    
+```php
+ES::type("my_type")->where("views", "<", 150)->get();
+```
 ##### Where greater than or equal
-
-    ES::where("views", "<=", 150)->get();
-    
+```php
+ES::type("my_type")->where("views", "<=", 150)->get();
+```
 ##### Where like
-
-    ES::where("title", "like", "foo")->get();
-    
+```php
+ES::type("my_type")->where("title", "like", "foo")->get();
+```
 ##### Where field exists
+```php
+ES::type("my_type")->where("hobbies", "exists", true)->get(); 
 
-    ES::where("hobbies", "exists", true)->get(); or ES::whereExists("hobbies", true)->get();
-    
+# or 
+
+ES::type("my_type")->whereExists("hobbies", true)->get();
+```    
 ##### Where in clause
-    
-    ES::whereIn("id", [100, 150])->get();
-    
+```php    
+ES::type("my_type")->whereIn("id", [100, 150])->get();
+```
 ##### Where between clause 
-    
-    ES::whereBetween("id", 100, 150)->get();
-   
-  >
-    
+```php    
+ES::type("my_type")->whereBetween("id", 100, 150)->get();
+
+# or 
+
+ES::type("my_type")->whereBetween("id", [100, 150])->get();
+```    
 ##### Where not clause
-    
-    ES::whereNot("views", 150)->get(); or ES::where("views", "=", 150)->get();
+```php    
+ES::type("my_type")->whereNot("status", "published")->get(); 
 
+# or
+
+ES::type("my_type")->whereNot("status", "=", "published")->get();
+```
 ##### Where not greater than
-
-    ES::whereNot("views", ">", 150)->get();
-
+```php
+ES::type("my_type")->whereNot("views", ">", 150)->get();
+```
 ##### Where not greater than or equal
-
-    ES::whereNot("views", ">=", 150)->get();
-    
+```php
+ES::type("my_type")->whereNot("views", ">=", 150)->get();
+```
 ##### Where not less than
-
-    ES::whereNot("views", "<", 150)->get();
-    
+```php
+ES::type("my_type")->whereNot("views", "<", 150)->get();
+```
 ##### Where not less than or equal
-
-    ES::whereNot("views", "<=", 150)->get();
-    
+```php
+ES::type("my_type")->whereNot("views", "<=", 150)->get();
+```
 ##### Where not like
-
-    ES::whereNot("title", "like", "foo")->get();
-    
+```php
+ES::type("my_type")->whereNot("title", "like", "foo")->get();
+```
 ##### Where not field exists
+```php
+ES::type("my_type")->whereNot("hobbies", "exists", true)->get(); 
 
-    ES::whereNot("hobbies", "exists", true)->get(); or ES::whereExists("hobbies", true)->get();
-    
+# or
+
+ES::type("my_type")->whereExists("hobbies", true)->get();
+```    
 ##### Where not in clause
-    
-    ES::whereNotIn("id", [100, 150])->get();
-    
+```php    
+ES::type("my_type")->whereNotIn("id", [100, 150])->get();
+```
 ##### Where not between clause 
-    
-    ES::whereNotBetween("id", 100, 150)->get();
-    
-    
-  >
-  
+```php    
+ES::type("my_type")->whereNotBetween("id", 100, 150)->get();
+
+# or
+
+ES::type("my_type")->whereNotBetween("id", [100, 150])->get();
+```
+   
 ##### Search by a distance from a geo point 
-  
-    ES::distance("location", ["lat" => -33.8688197, "lon" => 151.20929550000005], "10km")->get();
-    ES::distance("location", "-33.8688197,151.20929550000005", "10km")->get();
-    ES::distance("location", [151.20929550000005, -33.8688197], "10km")->get();
-  
-  
-  >
+```php  
+ES::type("my_type")->distance("location", ["lat" => -33.8688197, "lon" => 151.20929550000005], "10km")->get();
+
+# or
+
+ES::type("my_type")->distance("location", "-33.8688197,151.20929550000005", "10km")->get();
+
+# or
+
+ES::type("my_type")->distance("location", [151.20929550000005, -33.8688197], "10km")->get();  
+```
   
 ##### Search the entire document
     
+```php
+ES::type("my_type")->search("bar")->get();
     
-    ES::search("bar")->get();
+# search with Boost = 2
     
-    # search with Boost = 2
-    
-    ES::search("bar", 2)->get();
-    
-  >
-  
+ES::type("my_type")->search("bar", 2)->get();
+```
+
 ##### Return only first record
-    
-    ES::search("bar")->first();
-    
-  >
+
+```php    
+ES::type("my_type")->search("bar")->first();
+```
   
 ##### Return only count
-    
-    ES::search("bar")->count();
-    
+```php    
+ES::type("my_type")->search("bar")->count();
+```
     
 ##### Scan-and-Scroll queries
     
  These queries are suitable for large amount of data. 
     A scrolled search allows you to do an initial search and to keep pulling batches of results
     from Elasticsearch until there are no more results left. It’s a bit like a cursor in a traditional database
-    
-    $documents = ES::search("foo")
-                    ->scroll("2m")
-                    ->take(1000)
-                    ->get();
-                    
+
+```php    
+$documents = ES::type("my_type")->search("foo")
+                 ->scroll("2m")
+                 ->take(1000)
+                 ->get();
+```              
   Response will contain a hashed code `scroll_id` will be used to get the next result by running
-    
-    $documents = ES::search("foo")
-                        ->scroll("2m")
-                        ->scrollID("DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAAFMFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABSxZSUDhLU3ZySFJJYXFNRV9laktBMGZ3AAAAAAAAAU4WUlA4S1N2ckhSSWFxTUVfZWpLQTBmdwAAAAAAAAFPFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABTRZSUDhLU3ZySFJJYXFNRV9laktBMGZ3")
-                        ->get();
+
+```php
+$documents = ES::type("my_type")->search("foo")
+                 ->scroll("2m")
+                 ->scrollID("DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAAFMFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABSxZSUDhLU3ZySFJJYXFNRV9laktBMGZ3AAAAAAAAAU4WUlA4S1N2ckhSSWFxTUVfZWpLQTBmdwAAAAAAAAFPFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABTRZSUDhLU3ZySFJJYXFNRV9laktBMGZ3")
+                 ->get();
+```
                         
    And so on ...
     
@@ -494,192 +605,238 @@ Index and type names setted in query overrides their values in `es.php`.
     
    To clear `scroll_id` 
     
-    ES::scrollID("DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAAFMFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABSxZSUDhLU3ZySFJJYXFNRV9laktBMGZ3AAAAAAAAAU4WUlA4S1N2ckhSSWFxTUVfZWpLQTBmdwAAAAAAAAFPFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABTRZSUDhLU3ZySFJJYXFNRV9laktBMGZ3")
+```php  
+ES::type("my_type")->scrollID("DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAAFMFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABSxZSUDhLU3ZySFJJYXFNRV9laktBMGZ3AAAAAAAAAU4WUlA4S1N2ckhSSWFxTUVfZWpLQTBmdwAAAAAAAAFPFlJQOEtTdnJIUklhcU1FX2VqS0EwZncAAAAAAAABTRZSUDhLU3ZySFJJYXFNRV9laktBMGZ3")
         ->clear();
-    
-  >
+```
     
 ##### Paginate results with per_page = 5
-      
-    $documents = ES::search("bar")->paginate(5);
+
+```php   
+$documents = ES::type("my_type")->search("bar")->paginate(5);
     
-    # getting pagination links
+# Getting pagination links
     
-    $documents->links();
-    
-    
-  >
-  
+$documents->links();
+
+# Bootstrap 4 pagination
+
+$documents->links("bootstrap-4");
+
+# Simple bootstrap 4 pagination
+
+$documents->links("simple-bootstrap-4");
+
+# Simple pagination
+
+$documents->links("simple-default");
+```
+
+These are all pagination methods you may use:
+
+```php
+$documents->count()
+$documents->currentPage()
+$documents->firstItem()
+$documents->hasMorePages()
+$documents->lastItem()
+$documents->lastPage()
+$documents->nextPageUrl()
+$documents->perPage()
+$documents->previousPageUrl()
+$documents->total()
+$documents->url($page)
+```
+
 ##### Getting the query array without execution
 
-	$query = ES::search("foo")->where("views", ">", 150)->query();
-  
+```php
+ES::type("my_type")->search("foo")->where("views", ">", 150)->query();
+```
+
+##### Getting the original elasticsearch response
+
+```php
+ES::type("my_type")->search("foo")->where("views", ">", 150)->response();
+```
+
 ##### Ignoring bad HTTP response
-      
-    $documents = ES::ignore(404, 500)->id(5)->first();
-    
-    
-  >
-  
-  
+
+```php      
+ES::type("my_type")->ignore(404, 500)->id(5)->first();
+```
+
 ##### Query Caching (Laravel & Lumen)
 
 Package comes with a built-in caching layer based on laravel cache.
 
-	ES::search("foo")->remember(10)->get();
+```php
+ES::type("my_type")->search("foo")->remember(10)->get();
 	
-	# you can specify a custom cache key
+# Specify a custom cache key
 
-	ES::search("foo")->remember(10, "last_documents")->get();
+ES::type("my_type")->search("foo")->remember(10, "last_documents")->get();
 	
-	# Caching using other available driver
+# Caching using other available driver
 	
-	ES::search("foo")->cacheDriver("redis")->remember(10, "last_documents")->get();
+ES::type("my_type")->search("foo")->cacheDriver("redis")->remember(10, "last_documents")->get();
 	
-	# Caching with cache key prefix
+# Caching with cache key prefix
 	
-	ES::search("foo")->cacheDriver("redis")->cachePrefix("docs")->remember(10, "last_documents")->get();
-	
-   
+ES::type("my_type")->search("foo")->cacheDriver("redis")->cachePrefix("docs")->remember(10, "last_documents")->get();
+```
 
 ##### Executing elasticsearch raw queries
-    
-    ES::raw()->search([
-        "index" => "my_index",
-        "type"  => "my_type",
-        "body" => [
-            "query" => [
-                "bool" => [
-                    "must" => [
-                        [ "match" => [ "address" => "mill" ] ],
-                        [ "match" => [ "address" => "lane" ] ]
-                    ]
+
+```php
+ES::raw()->search([
+    "index" => "my_index",
+    "type"  => "my_type",
+    "body" => [
+        "query" => [
+            "bool" => [
+                "must" => [
+                    [ "match" => [ "address" => "mill" ] ],
+                    [ "match" => [ "address" => "lane" ] ]
                 ]
             ]
         ]
-    ]);
-  
-  
-   >
+    ]
+]);
+```
    
 ##### Insert a new document
     
-    ES::id(3)->insert([
-        "title" => "Test document",
-        "content" => "Sample content"
-    ]);
-    
-    
-    A new document will be inserted with _id = 3.
+```php
+ES::type("my_type")->id(3)->insert([
+    "title" => "Test document",
+    "content" => "Sample content"
+]);
+     
+# A new document will be inserted with _id = 3.
   
-    [id is optional] if not specified, a unique hash key will be generated 
-
-  
+# [id is optional] if not specified, a unique hash key will be generated.
+```
   >
     
 ##### Bulk insert a multiple of documents at once.
      
-   
-     ES::bulk(function ($query){
-         $query->id(10)->insert(["title" => "Test document 1","content" => "Sample content 1"]);
-         $query->id(11)->insert(["title" => "Test document 2", "content" => "Sample content 2"]);
-     });
-     
-     # or use other code style using multidimensional array of [id => data] pairs
-     
-     ES::bulk([
-     
-         10 => [
-            "title" => "Test document 1",
-            "content" => "Sample content 1"
-         ],
-         
-         11 => [
-            "title" => "Test document 2",
-            "content" => "Sample content 2"
-         ]
-         
-     ]);
-     
-     The two given documents will be inserted with its associated ids
-  
-   >
-   
+```php
+# Main query
+
+ES::index("my_index")->type("my_type")->bulk(function ($bulk){
+
+    # Sub queries
+
+	$bulk->index("my_index_1")->type("my_type_1")->id(10)->insert(["title" => "Test document 1","content" => "Sample content 1"]);
+	$bulk->index("my_index_2")->id(11)->insert(["title" => "Test document 2","content" => "Sample content 2"]);
+	$bulk->id(12)->insert(["title" => "Test document 3", "content" => "Sample content 3"]);
+	
+});
+
+# Notes from the above query:
+
+# As index and type names are required for insertion, Index and type names are extendable. This means that: 
+
+# If index() is not specified in subquery:
+# -- The builder will get index name from the main query.
+# -- if index is not specified in main query, the builder will get index name from configuration file.
+
+# And
+
+# If type() is not specified in subquery:
+# -- The builder will get type name from the main query.
+
+# you can use old bulk code style using multidimensional array of [id => data] pairs
+ 
+ES::type("my_type")->bulk([
+ 
+	10 => [
+		"title" => "Test document 1",
+		"content" => "Sample content 1"
+	],
+	 
+	11 => [
+		"title" => "Test document 2",
+		"content" => "Sample content 2"
+	]
+ 
+]);
+ 
+# The two given documents will be inserted with its associated ids
+```
+
 ##### Update an existing document
-       
-    ES::id(3)->update([
-       "title" => "Test document",
-       "content" => "sample content"
-    ]);
-        
-    Document has _id = 3 will be updated.
+```php     
+ES::type("my_type")->id(3)->update([
+   "title" => "Test document",
+   "content" => "sample content"
+]);
     
-    [id is required]
+# Document has _id = 3 will be updated.
     
-   >
+# [id is required]
+```
    
 ##### Incrementing field
-       
-    ES::id(3)->increment("views");
-        
-    Document has _id = 3 will be incremented by 1.
+```php
+ES::type("my_type")->id(3)->increment("views");
     
-    ES::id(3)->increment("views", 3);
+# Document has _id = 3 will be incremented by 1.
     
-    Document has _id = 3 will be incremented by 3.
+ES::type("my_type")->id(3)->increment("views", 3);
+    
+# Document has _id = 3 will be incremented by 3.
 
-    [id is required]
-    
-   >
+# [id is required]
+```
    
 ##### Decrementing field
-       
-    ES::id(3)->decrement("views");
-        
-    Document has _id = 3 will be decremented by 1.
+```php 
+ES::type("my_type")->id(3)->decrement("views");
     
-    ES::id(3)->decrement("views", 3);
+# Document has _id = 3 will be decremented by 1.
     
-    Document has _id = 3 will be decremented by 3.
+ES::type("my_type")->id(3)->decrement("views", 3);
+    
+# Document has _id = 3 will be decremented by 3.
 
-    [id is required]
-    
-   >
+# [id is required]
+```
    
 ##### Update using script
        
-
-    # increment field by script
+```php
+# increment field by script
     
-    ES::id(3)->script(
-        "ctx._source.$field += params.count",
-        ["count" => 1]
-    );
+ES::type("my_type")->id(3)->script(
+    "ctx._source.$field += params.count",
+    ["count" => 1]
+);
     
-    # add php tag to tags array list
+# add php tag to tags array list
     
-    ES::id(3)->script(
-        "ctx._source.tags.add(params.tag)",
-        ["tag" => "php"]
-    );
+ES::type("my_type")->id(3)->script(
+    "ctx._source.tags.add(params.tag)",
+    ["tag" => "php"]
+);
     
-    # delete the doc if the tags field contain mongodb, otherwise it does nothing (noop)
+# delete the doc if the tags field contain mongodb, otherwise it does nothing (noop)
     
-    ES::id(3)->script(
-        "if (ctx._source.tags.contains(params.tag)) { ctx.op = 'delete' } else { ctx.op = 'none' }",
-        ["tag" => "mongodb"]
-    );
-    
-   >
+ES::type("my_type")->id(3)->script(
+    "if (ctx._source.tags.contains(params.tag)) { ctx.op = 'delete' } else { ctx.op = 'none' }",
+    ["tag" => "mongodb"]
+);
+```
    
 ##### Delete a document
-       
-    ES::id(3)->delete();
-        
-    Document has _id = 3 will be deleted.
+```php
+ES::type("my_type")->id(3)->delete();
     
-    [id is required]
+# Document has _id = 3 will be deleted.
     
+# [id is required]
+```
 
 ## Releases
 
